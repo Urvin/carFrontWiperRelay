@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 3.0.0?>
+
+<ManagedProjectBuildInfo>
+<project id="carFrontWiperRelay.com.htsoft.picc.std.projectType.hex_1.0.1.438497562" name="Hex Project Type" projectType="com.htsoft.picc.std.projectType.hex_1.0.1">
+<configuration artifactExtension="hex" artifactName="carFrontWiperRelay" cleanCommand="rm -rf" description="" id="com.htsoft.picc.std.config.release.hex_1.0.1.1078643766" name="Release" parent="com.htsoft.picc.std.config.release.hex_1.0.1">
+<toolChain id="com.htsoft.picc.std.toolChain.release.hex.549299964_1.0.1" name="Release Tool Chain" superClass="com.htsoft.picc.std.toolChain.release.hex_1.0.1">
+<builder id="com.htsoft.picc.builder.make.1078643766" name="GNU MMake (PICC)" superClass="com.htsoft.picc.builder.make"/>
+<tool id="com.htsoft.picc.std.tool.assembler.1817204946_1.0.1" name="Assembler" superClass="com.htsoft.picc.std.tool.assembler_1.0.1"/>
+<tool id="com.htsoft.picc.std.tool.compiler.748311958_1.0.1" name="Compiler" superClass="com.htsoft.picc.std.tool.compiler_1.0.1"/>
+<tool id="com.htsoft.picc.std.tool.linker.1253358400_1.0.1" name="Linker" superClass="com.htsoft.picc.std.tool.linker_1.0.1"/>
+</toolChain>
+</configuration>
+<configuration artifactExtension="hex" artifactName="carFrontWiperRelay" cleanCommand="rm -rf" description="" id="com.htsoft.picc.std.config.debug.hex_1.0.1.393443200" name="Debug" parent="com.htsoft.picc.std.config.debug.hex_1.0.1">
+<toolChain id="com.htsoft.picc.std.toolChain.debug.hex.33716182_1.0.1" name="Debug Tool Chain" superClass="com.htsoft.picc.std.toolChain.debug.hex_1.0.1">
+<builder id="com.htsoft.picc.builder.make.393443200" name="GNU MMake (PICC)" superClass="com.htsoft.picc.builder.make"/>
+<tool id="com.htsoft.picc.std.tool.assembler.402962382_1.0.1" name="Assembler" superClass="com.htsoft.picc.std.tool.assembler_1.0.1"/>
+<tool id="com.htsoft.picc.std.tool.compiler.1560874047_1.0.1" name="Compiler" superClass="com.htsoft.picc.std.tool.compiler_1.0.1"/>
+<tool id="com.htsoft.picc.std.tool.linker.823835198_1.0.1" name="Linker" superClass="com.htsoft.picc.std.tool.linker_1.0.1"/>
+</toolChain>
+</configuration>
+</project>
+</ManagedProjectBuildInfo>
