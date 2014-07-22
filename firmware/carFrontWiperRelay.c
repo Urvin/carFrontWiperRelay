@@ -59,14 +59,14 @@ __CONFIG(INTIO & WDTDIS & PWRTDIS & MCLRDIS & UNPROTECT & UNPROTECT & BORDIS & I
 #define SWITCH_DEBOUNCE_TICKS 3
 
 #define WATER_WIPER_WAIT_TIME 15
-#define WATER_WIPER_WORK_TIME_BIG 240
-#define WATER_WIPER_WORK_TIME_SMALL 30
-#define WATER_WIPER_SWITCH_MODE_TIME 30
+#define WATER_WIPER_WORK_TIME_BIG 120		/* 4 seconds */
+#define WATER_WIPER_WORK_TIME_SMALL 30      /* 1 second */
+#define WATER_WIPER_SWITCH_MODE_TIME 30     /* 1 second */
 
 #define INTERMITTENT_WIPER_WORK_TIME 30
-#define INTERMITTENT_WIPER_WAIT_TIME 240	      /* default, 8 seconds */
-#define INTERMITTENT_WIPER_WAIT_TIME_MIN 150  /* 5 seconds */
-#define INTERMITTENT_WIPER_WAIT_TIME_MAX 3600	/* 2 minutes */
+#define INTERMITTENT_WIPER_WAIT_TIME 210        /* default, 7 seconds */
+#define INTERMITTENT_WIPER_WAIT_TIME_MIN 60     /* 2 seconds */
+#define INTERMITTENT_WIPER_WAIT_TIME_MAX 3600   /* 2 minutes */
 
 //----------------------------------------------------------------------------//
 
