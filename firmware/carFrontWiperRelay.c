@@ -101,7 +101,7 @@ void initSoftware(void)
 	fSwitchIntermittentState = INTERMITTENT_OFF;
 	fSwitchWaterState = WATER_OFF;
 
-	fWiperTimer = 0;	
+	fWiperTimer = WIPER_TIMER_INFINITY;	
 	fWiperMode = WIPER_MODE_WAIT;
 	
 	fWaitTimer = WIPER_TIMER_INFINITY;
@@ -193,38 +193,53 @@ void processWaitTimer(void)
 
 void processWiper(void)
 {
-	if(fWiperTimer != WIPER_TIMER_INFINITY)
+	if(fWiperTimer < WIPER_TIMER_INFINITY)
 	{
 		
 		if(fWiperMode == WIPER_MODE_WAIT)
 		{
 			if(fWiperTimer >= fWiperCurrentWaitTime)
 			{
-				fWiperMode = WIPER_MODE_WORK;
-				fWiperTimer = 0;
-			}
-		}
-		
-		else
-		{
-			if(fWiperTimer >= fWiperCurrentWaitTime)
-			{
-				if(fWaterModeOn == 1)
-					fWaterModeOn = 0;
-				
-				if(fSwitchIntermittentState == INTERMITTENT_ON)
+				if(fSwitchIntermittentState == INTERMITTENT_ON || fWaterModeOn == 1)
 				{
+					fWiperMode = WIPER_MODE_WORK;
 					fWiperTimer = 0;
-					setupIntermittentTimes();
 				}
 				else
 				{
 					fWiperTimer = WIPER_TIMER_INFINITY;
 				}
-				
-				fWiperMode = WIPER_MODE_WAIT;
-				nullWaitTimer();
 			}
+		}
+		
+		else
+		{
+			if(fWiperTimer >= fWiperCurrentWorkTime)
+			{
+				if(fSwitchWaterState == WATER_ON)
+				{
+					fWiperTimer = 0;
+				}	
+				else
+				{
+					if(fWaterModeOn == 1)
+						fWaterModeOn = 0;
+						
+					if(fSwitchIntermittentState == INTERMITTENT_ON)
+					{
+						fWiperTimer = 0;
+						setupIntermittentTimes();
+					}
+					else
+					{
+						fWiperTimer = WIPER_TIMER_INFINITY;
+					}
+					
+					fWiperMode = WIPER_MODE_WAIT;
+					nullWaitTimer();						
+				}				
+			}
+			
 		}
 		fWiperTimer++;
 	}
@@ -248,19 +263,22 @@ void onWaterSwitchOn(void)
 		fWiperTimer = 0;
 	
 		fWaterSwitchTimer = 0;
+		
+		setupWaterTimes();
 	}
 	else
 	{
 		setupWaterTimeBig();
-	}
-	
-	setupWaterTimes();
+	}	
 }
 
 void onWaterSwitchOff(void)
 {
 	if(fWaterSwitchTimer > WATER_WIPER_SWITCH_MODE_TIME)
+	{
+		fWiperTimer = 0;
 		setupWaterTimeBig();
+	}
 }
 
 //----------------------------------------------------------------------------//
