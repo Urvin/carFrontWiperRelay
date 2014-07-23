@@ -53,17 +53,21 @@ __CONFIG(INTIO & WDTDIS & PWRTDIS & MCLRDIS & UNPROTECT & UNPROTECT & BORDIS & I
 // Comment this to disable adjustable intermittent functionality
 #define ADJUSTABLE_INTERMITTENT_DELAY_ON
 
+// Comment this to disable remaining water removing function
+#define REMAINING_WATER_REMOVING_ON
+
 
 // All times in ticks, ~30 ticks per second
 
 #define SWITCH_DEBOUNCE_TICKS 3
 
-#define WATER_WIPER_WAIT_TIME 15
-#define WATER_WIPER_WORK_TIME_BIG 120		/* 4 seconds */
-#define WATER_WIPER_WORK_TIME_SMALL 30      /* 1 second */
-#define WATER_WIPER_SWITCH_MODE_TIME 30     /* 1 second */
+#define WATER_WIPER_WAIT_TIME 12                /* 0.4 second */
+#define WATER_WIPER_WORK_TIME_BIG 105           /* 3.5 seconds */
+#define WATER_WIPER_WORK_TIME_SMALL 30          /* 1 second */
+#define WATER_WIPER_SWITCH_MODE_TIME 30         /* 1 second */
+#define WATER_WIPER_REMOVEMENT_WAIT_TIME 150    /* 5 seconds */
 
-#define INTERMITTENT_WIPER_WORK_TIME 30
+#define INTERMITTENT_WIPER_WORK_TIME 30         /* 1 second */
 #define INTERMITTENT_WIPER_WAIT_TIME 210        /* default, 7 seconds */
 #define INTERMITTENT_WIPER_WAIT_TIME_MIN 60     /* 2 seconds */
 #define INTERMITTENT_WIPER_WAIT_TIME_MAX 3600   /* 2 minutes */
@@ -71,6 +75,7 @@ __CONFIG(INTIO & WDTDIS & PWRTDIS & MCLRDIS & UNPROTECT & UNPROTECT & BORDIS & I
 //----------------------------------------------------------------------------//
 
 volatile bit fWaterModeOn;
+volatile bit fWaterRemovementOn;
 volatile bit fWiperMode;
 
 volatile uint8 fSwitchIntermittentDebouncer;
@@ -95,6 +100,7 @@ void initSoftware(void)
 	PIN_MOTOR_OUT = MOTOR_OFF;
 	
 	fWaterModeOn = 0;
+	fWaterRemovementOn = 0;
 	
 	fSwitchIntermittentDebouncer = 0;
 	fSwitchWaterDebouncer = 0;
@@ -161,6 +167,17 @@ void setupWaterTimes(void)
 void setupWaterTimeBig(void)
 {
 	fWiperCurrentWorkTime = WATER_WIPER_WORK_TIME_BIG;
+	
+	#ifdef REMAINING_WATER_REMOVING_ON
+		if(fSwitchIntermittentState != INTERMITTENT_ON || fIntermittentWaitTime > WATER_WIPER_REMOVEMENT_WAIT_TIME)
+			fWaterRemovementOn = 1;
+	#endif
+}
+
+void setupWaterRemovementTimes(void)
+{
+	fWiperCurrentWaitTime = WATER_WIPER_REMOVEMENT_WAIT_TIME;
+	fWiperCurrentWorkTime = WATER_WIPER_WORK_TIME_SMALL;
 }
 
 void setupIntermittentTimes(void)
@@ -222,17 +239,36 @@ void processWiper(void)
 				}	
 				else
 				{
-					if(fWaterModeOn == 1)
-						fWaterModeOn = 0;
+					#ifdef REMAINING_WATER_REMOVING_ON
+						if(fWaterModeOn == 1)
+						{
+							if(fWaterRemovementOn == 1)
+							{
+								fWaterRemovementOn = 0;
+								setupWaterRemovementTimes();
+								fWiperTimer = 0;
+							}
+							else
+							{
+								fWaterModeOn = 0;
+							}
+						}
+					#else
+						if(fWaterModeOn == 1)
+							fWaterModeOn = 0;
+					#endif
 						
-					if(fSwitchIntermittentState == INTERMITTENT_ON)
+					if(fWaterModeOn == 0)
 					{
-						fWiperTimer = 0;
-						setupIntermittentTimes();
-					}
-					else
-					{
-						fWiperTimer = WIPER_TIMER_INFINITY;
+						if(fSwitchIntermittentState == INTERMITTENT_ON)
+						{
+							fWiperTimer = 0;
+							setupIntermittentTimes();
+						}
+						else
+						{
+							fWiperTimer = WIPER_TIMER_INFINITY;
+						}
 					}
 					
 					fWiperMode = WIPER_MODE_WAIT;
@@ -285,10 +321,12 @@ void onWaterSwitchOff(void)
 
 void onIntermittentSwitchOn(void)
 {
-	if(fWaitTimer < INTERMITTENT_WIPER_WAIT_TIME_MIN || fWaitTimer > INTERMITTENT_WIPER_WAIT_TIME_MAX)
-		fIntermittentWaitTime = INTERMITTENT_WIPER_WAIT_TIME;
-	else
-		fIntermittentWaitTime = fWaitTimer;
+	#ifdef ADJUSTABLE_INTERMITTENT_DELAY_ON
+		if(fWaitTimer < INTERMITTENT_WIPER_WAIT_TIME_MIN || fWaitTimer > INTERMITTENT_WIPER_WAIT_TIME_MAX)
+			fIntermittentWaitTime = INTERMITTENT_WIPER_WAIT_TIME;
+		else
+			fIntermittentWaitTime = fWaitTimer;
+	#endif
 			
 	
 	if(fWaterModeOn == 0)

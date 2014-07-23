@@ -5,6 +5,12 @@ Car front wiper relay
 
 This relay places instead of the standart one in the same place. Brings more functionality and less irritation.
 
+New functionality:
+ - Delay between water switch is on and first wiper swing come;
+ - Less swings for less water;
+ - Remaining water removing action;
+ - Adjustable delay in intermittent mode.
+
 
 Component list
 --------------
@@ -27,7 +33,61 @@ Directory tree
 --------------
  - circuit — device schematic diagram designed in Splan 7;
  - layout — PCB layout designed in Sprint Layout 6;
- - firmware — MCU firmware, Hi-Tech C STD 9.60PL3.
+ - firmware — MCU firmware, Hi-Tech C STD 9.60PL3;
+ - model — simple imitation model designed in Proteus 7.
+
+Code constants
+--------------
+
+You can change device behavior changing next constants. Note that all times measured in ticks, there are 30 ticks per second.
+
+`ADJUSTABLE_INTERMITTENT_DELAY_ON`
+
+Enables an adjustable delay in intermittent mode. Comment this row if you want a stable delay time mode.
+
+`REMAINING_WATER_REMOVING_ON`
+
+Enables a remaining water removement mode on. Comment this row if you want a stable delay time mode.
+
+`SWITCH_DEBOUNCE_TICKS 3`
+
+Switch debounce code work time *(max 255)*
+
+`WATER_WIPER_WAIT_TIME 15`
+
+A delay time before a wiper swing after a water switch is on *(max 65533)*
+
+`WATER_WIPER_SWITCH_MODE_TIME 30`
+
+Water switch work time dividing a 'small' and a 'big' wiper work time after it *(max 255)*
+
+`WATER_WIPER_REMOVEMENT_WAIT_TIME 150`
+
+Delay between last wiper swing after a water switch is off and a water removement swing.
+
+`WATER_WIPER_WORK_TIME_SMALL 30`
+
+'Small' wiper work time after a water switch is off *(max 65533)*
+
+`WATER_WIPER_WORK_TIME_BIG 240`
+
+'Big' wiper work time after a water switch is off *(max 65533)*
+
+`INTERMITTENT_WIPER_WORK_TIME 30`
+
+Enough time to start a wiper in intermittent mode *(max 65533)*
+
+`INTERMITTENT_WIPER_WAIT_TIME 240`
+
+Default (stable) intermittent delay time between wiper swings *(max 65533)*
+
+`INTERMITTENT_WIPER_WAIT_TIME_MIN 150`
+
+Minimal intermittent delay time *(max 65533)*
+
+`INTERMITTENT_WIPER_WAIT_TIME_MAX 3600`
+
+Maximal intermittent delay time *(max 65533)*
 
 Photos, installation, etc
 -------------------------
