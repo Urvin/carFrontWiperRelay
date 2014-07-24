@@ -64,7 +64,7 @@ __CONFIG(INTIO & WDTDIS & PWRTDIS & MCLRDIS & UNPROTECT & UNPROTECT & BORDIS & I
 #define WATER_WIPER_WAIT_TIME 10                /* 0.3 second */
 #define WATER_WIPER_WORK_TIME_BIG 99            /* 3.3 seconds */
 #define WATER_WIPER_WORK_TIME_SMALL 30          /* 1 second */
-#define WATER_WIPER_SWITCH_MODE_TIME 30         /* 1 second */
+#define WATER_WIPER_SWITCH_MODE_TIME 21         /* 0.7 second */
 #define WATER_WIPER_REMOVEMENT_WAIT_TIME 180    /* 6 seconds */
 
 #define INTERMITTENT_WIPER_WORK_TIME 30         /* 1 second */
