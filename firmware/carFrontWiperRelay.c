@@ -1,7 +1,7 @@
 /*
  Lifan Smily (320) car front wiper control module
  
- MCU pic12F683, hardware PWM
+ MCU pic12F683
  Hi-Tech C STD 9.60PL3
  v0.1
  
