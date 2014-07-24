@@ -91,8 +91,7 @@ Maximal intermittent delay time *(max 65533)*
 
 Photos, installation, etc
 -------------------------
-You can read about this device in my car blog later.
-
+You can read about this device in [my car blog](http://www.drive2.ru/l/4194615/).
 
 
 
