@@ -76,6 +76,7 @@ __CONFIG(INTIO & WDTDIS & PWRTDIS & MCLRDIS & UNPROTECT & UNPROTECT & BORDIS & I
 
 volatile bit fWaterModeOn;
 volatile bit fWaterRemovementOn;
+volatile bit fWaterRemovementWait;
 volatile bit fWiperMode;
 
 volatile uint8 fSwitchIntermittentDebouncer;
@@ -101,6 +102,7 @@ void initSoftware(void)
 	
 	fWaterModeOn = 0;
 	fWaterRemovementOn = 0;
+	fWaterRemovementWait = 0;
 	
 	fSwitchIntermittentDebouncer = 0;
 	fSwitchWaterDebouncer = 0;
@@ -217,7 +219,7 @@ void processWiper(void)
 		{
 			if(fWiperTimer >= fWiperCurrentWaitTime)
 			{
-				if(fSwitchIntermittentState == INTERMITTENT_ON || fWaterModeOn == 1)
+				if(fSwitchIntermittentState == INTERMITTENT_ON || fWaterModeOn)
 				{
 					fWiperMode = WIPER_MODE_WORK;
 					fWiperTimer = 0;
@@ -240,25 +242,28 @@ void processWiper(void)
 				else
 				{
 					#ifdef REMAINING_WATER_REMOVING_ON
-						if(fWaterModeOn == 1)
+						if(fWaterModeOn)
 						{
-							if(fWaterRemovementOn == 1)
+							if(fWaterRemovementOn)
 							{
 								fWaterRemovementOn = 0;
+								fWaterRemovementWait = 1;
+								
 								setupWaterRemovementTimes();
 								fWiperTimer = 0;
 							}
 							else
 							{
 								fWaterModeOn = 0;
+								fWaterRemovementWait = 0;
 							}
 						}
 					#else
-						if(fWaterModeOn == 1)
+						if(fWaterModeOn)
 							fWaterModeOn = 0;
 					#endif
 						
-					if(fWaterModeOn == 0)
+					if(!fWaterModeOn)
 					{
 						if(fSwitchIntermittentState == INTERMITTENT_ON)
 						{
@@ -292,12 +297,17 @@ void processWaterTimer(void)
 
 void onWaterSwitchOn(void)
 {
-	if(fWaterModeOn == 0)
+	#ifdef REMAINING_WATER_REMOVING_ON
+		if(!fWaterModeOn || (fWaterModeOn && fWaterRemovementWait && fWiperMode == WIPER_MODE_WAIT))
+	#else
+		if(!fWaterModeOn)
+	#endif
 	{
 		fWaterModeOn = 1;
+		fWaterRemovementOn = 0;
+		fWaterRemovementWait = 0;
 		fWiperMode = WIPER_MODE_WAIT;
 		fWiperTimer = 0;
-	
 		fWaterSwitchTimer = 0;
 		
 		setupWaterTimes();
@@ -329,7 +339,7 @@ void onIntermittentSwitchOn(void)
 	#endif
 			
 	
-	if(fWaterModeOn == 0)
+	if(!fWaterModeOn)
 	{
 		fWiperMode = WIPER_MODE_WORK;
 		fWiperTimer = 0;
