@@ -339,7 +339,11 @@ void onIntermittentSwitchOn(void)
 	#endif
 			
 	
-	if(!fWaterModeOn)
+	#ifdef REMAINING_WATER_REMOVING_ON
+		if(!fWaterModeOn || (fWaterModeOn && fWaterRemovementWait && fWiperMode == WIPER_MODE_WAIT))
+	#else
+		if(!fWaterModeOn)
+	#endif
 	{
 		fWiperMode = WIPER_MODE_WORK;
 		fWiperTimer = 0;
